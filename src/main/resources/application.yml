@@ -1,0 +1,33 @@
+spring:
+  application:
+    name: oris-sem-2-boot
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/agona-08-jpa
+    username: postgres
+    password: 1005
+    hikari:
+      maximum-pool-size: 20
+  mail:
+    host: smtp.mail.ru
+    username: "@mail.ru"
+    password: ""
+    port: 587
+    properties:
+      mail:
+        smtp:
+          auth: true
+          connectiontimeout: 5000
+          timeout: 5000
+          writetimeout: 5000
+          starttls:
+            enable: true
+
+mail:
+  content: "Dear {name}, please follow the link below to verify your account: <a href={url}>VERIFY</a>"
+  from: "v@gmail.com"
+  sender: Test Application
+  subject: Please verify your account
+
+server:
+  port: 8082
