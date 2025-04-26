@@ -24,13 +24,10 @@ public class SpringSecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/auth/registration", "/auth/registration/verify").permitAll()
+                        .requestMatchers("/auth/registration", "/auth/registration/verify", "/auth/login").permitAll()
                         .anyRequest().authenticated()
                 )
-                .formLogin(form -> form
-                        .loginPage("/login")
-                        .permitAll()
-                )
+
                 .logout(logout -> logout.permitAll())
                 .build();
     }

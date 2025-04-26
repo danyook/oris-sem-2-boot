@@ -5,8 +5,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import ru.itis.danyook.dto.ExchangeRateResponse;
+import ru.itis.danyook.dto.UserLoginRequest;
 import ru.itis.danyook.dto.UserRegistrationRequest;
 import ru.itis.danyook.service.EmailService;
+import ru.itis.danyook.service.ExchangeService;
 import ru.itis.danyook.service.auth.AuthUserService;
 
 import java.util.Map;
@@ -33,7 +36,7 @@ public class AuthController {
     public String registerUser(@ModelAttribute UserRegistrationRequest registrationDto, Model model) {
         if (userService.findUserByEmail(registrationDto.email()) != null) {
             model.addAttribute("error", "Пользователь с данной почтой уже зарегистрирован.");
-            return "registration";
+            return "redirect:/auth/registration";
         }
 
         String verificationCode = emailService.sendVerificationCode(registrationDto.email());
@@ -69,5 +72,19 @@ public class AuthController {
             model.addAttribute("error", "Неверный код подтверждения. Попробуйте еще раз.");
             return "verify";
         }
+    }
+
+    @GetMapping("/login")
+    public String showLoginForm(Model model) {
+        model.addAttribute("loginDto", new UserLoginRequest("", ""));
+        return "login";
+    }
+
+    @PostMapping("/login")
+    public String login(@ModelAttribute UserLoginRequest user, Model model) {
+        if (userService.verify(user)) {
+            return "success";
+        }
+        return "redirect:/auth/login";
     }
 }

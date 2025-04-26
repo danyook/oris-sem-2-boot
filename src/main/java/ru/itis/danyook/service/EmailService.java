@@ -2,6 +2,7 @@ package ru.itis.danyook.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.json.JSONArray;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
@@ -17,6 +18,7 @@ public class EmailService {
 
     private final JavaMailSender mailSender;
     private final Map<String, String> verificationCodes = new ConcurrentHashMap<>();
+    private final ExchangeService exchangeService;
 
     public String sendVerificationCode(String email) {
         String code = generateRandomCode();
@@ -25,7 +27,7 @@ public class EmailService {
             SimpleMailMessage message = new SimpleMailMessage();
             message.setTo(email);
             message.setSubject("Код подтверждения");
-            message.setText("Ваш код подтверждения: " + code);
+            message.setText("Ваш код подтверждения: %s".formatted(code));
             mailSender.send(message);
             log.info("Email sent to {}", email);
         } catch (Exception ex) {
@@ -46,5 +48,18 @@ public class EmailService {
 
     private String generateRandomCode() {
         return String.format("%06d", new Random().nextInt(1000000));
+    }
+
+    public void sendExchangeRate(String email, String exchangeRates) {
+        try {
+            SimpleMailMessage message = new SimpleMailMessage();
+            message.setTo(email);
+            message.setSubject("Курсы валют");
+            message.setText("Курс валют на сегодня: %s".formatted(exchangeRates));
+            mailSender.send(message);
+            log.info("Email sent to {}", email);
+        } catch (Exception ex) {
+            log.error("Failed to send email to {}: {}", email, ex.getMessage());
+        }
     }
 }

@@ -10,7 +10,7 @@ spring:
       maximum-pool-size: 20
   mail:
     host: smtp.mail.ru
-    username: "@mail.ru"
+    username: "dlyavsego123455@mail.ru"
     password: ""
     port: 587
     properties:
@@ -28,6 +28,9 @@ mail:
   from: "v@gmail.com"
   sender: Test Application
   subject: Please verify your account
+
+scheduling:
+  enabled: true
 
 server:
   port: 8082
